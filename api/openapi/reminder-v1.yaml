@@ -1,0 +1,69 @@
+openapi: 3.1.0
+info:
+  title: ReminderService API
+  version: 1.0.0-blueprint
+  description: Contract-first API skeleton for Greenpause phase.
+servers:
+  - url: https://api.reminder.example.com
+paths:
+  /v1/reminders:
+    post:
+      operationId: CreateReminder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReminderCommand'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reminder'
+components:
+  schemas:
+    Reminder:
+      type: object
+      required: [ReminderId, TenantId, UserId, ReminderStatus, NextExecutionAt]
+      properties:
+        ReminderId:
+          type: string
+          format: uuid
+        TenantId:
+          type: string
+          format: uuid
+        UserId:
+          type: string
+          format: uuid
+        ReminderStatus:
+          type: string
+          enum: [Active, Paused, Canceled]
+        NextExecutionAt:
+          type: string
+          format: date-time
+    CreateReminderCommand:
+      type: object
+      required: [TenantId, UserId, ScheduleRule, Payload]
+      properties:
+        TenantId:
+          type: string
+          format: uuid
+        UserId:
+          type: string
+          format: uuid
+        ScheduleRule:
+          $ref: '#/components/schemas/ScheduleRule'
+        Payload:
+          type: object
+          additionalProperties: true
+    ScheduleRule:
+      type: object
+      required: [ScheduleType, Timezone]
+      properties:
+        ScheduleType:
+          type: string
+          enum: [OneTime, Interval, Cron]
+        Timezone:
+          type: string

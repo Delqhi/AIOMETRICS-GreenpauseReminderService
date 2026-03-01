@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package reminder.v1;
+
+option go_package = "github.com/aiometrics/reminder/api/proto/reminder/v1;reminderv1";
+
+message Reminder {
+  string ReminderId = 1;
+  string TenantId = 2;
+  string UserId = 3;
+  string ReminderStatus = 4;
+  string NextExecutionAt = 5;
+}
+
+message CreateReminderRequest {
+  string TenantId = 1;
+  string UserId = 2;
+  string ScheduleType = 3;
+  string Timezone = 4;
+  string PayloadJson = 5;
+}
+
+message CreateReminderResponse {
+  Reminder Reminder = 1;
+}
+
+service ReminderCommandService {
+  rpc CreateReminder(CreateReminderRequest) returns (CreateReminderResponse);
+}
